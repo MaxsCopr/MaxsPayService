@@ -1,0 +1,1 @@
+package com.maxs.pay.authentication.exception; public class ResourceNotFoundException extends RuntimeException { public ResourceNotFoundException(String m){super(m);} }

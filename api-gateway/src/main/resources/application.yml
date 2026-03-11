@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - RequestRateLimiter=redis-rate-limiter.replenishRate=50,redis-rate-limiter.burstCapacity=100
+      routes:
+        - id: auth-route
+          uri: lb://authentication-service
+          predicates: [ Path=/auth/** ]
+        - id: users-route
+          uri: lb://user-service
+          predicates: [ Path=/users/** ]
+        - id: payments-route
+          uri: lb://payment-service
+          predicates: [ Path=/payments/** ]
+        - id: transactions-route
+          uri: lb://transaction-service
+          predicates: [ Path=/transactions/** ]
+        - id: admin-route
+          uri: lb://admin-service
+          predicates: [ Path=/admin/** ]
+  redis:
+    host: localhost
+    port: 6379
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: 01234567890123456789012345678901
+server:
+  port: 8080
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,gateway

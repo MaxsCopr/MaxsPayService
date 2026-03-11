@@ -1,0 +1,54 @@
+version: '3.9'
+services:
+  config-server:
+    build: ../config-server
+    ports: ["8888:8888"]
+  eureka-server:
+    build: ../eureka-server
+    ports: ["8761:8761"]
+    depends_on: [config-server]
+  api-gateway:
+    build: ../api-gateway
+    ports: ["8080:8080"]
+    depends_on: [eureka-server]
+  authentication-service:
+    build: ../authentication-service
+    ports: ["8081:8081"]
+  user-service:
+    build: ../user-service
+    ports: ["8082:8082"]
+  merchant-service:
+    build: ../merchant-service
+    ports: ["8083:8083"]
+  payment-service:
+    build: ../payment-service
+    ports: ["8084:8084"]
+  transaction-service:
+    build: ../transaction-service
+    ports: ["8085:8085"]
+  webhook-service:
+    build: ../webhook-service
+    ports: ["8086:8086"]
+  notification-service:
+    build: ../notification-service
+    ports: ["8087:8087"]
+  reconciliation-service:
+    build: ../reconciliation-service
+    ports: ["8088:8088"]
+  admin-service:
+    build: ../admin-service
+    ports: ["8089:8089"]
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+  kafka:
+    image: bitnami/kafka:3.7
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+    ports: ["9092:9092"]
