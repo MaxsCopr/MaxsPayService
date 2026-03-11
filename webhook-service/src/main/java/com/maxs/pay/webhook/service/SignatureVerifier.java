@@ -1,0 +1,1 @@
+package com.maxs.pay.webhook.service; import org.springframework.stereotype.Component; @Component public class SignatureVerifier { public boolean verify(String payload,String signature){ return signature!=null && !signature.isBlank() && payload!=null; } }
